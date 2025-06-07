@@ -1,0 +1,115 @@
+
+% !TeX encoding = UTF-8
+
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{left=3cm,right=3cm,top=3cm,bottom=3cm}
+
+
+\title{Simulación del comportamiento de votantes en una elección local\\
+       \large Modelo de ecuaciones diferenciales con escenarios de propaganda y redes sociales}
+\author{Nombre del autor \\ \texttt{correo@ejemplo.com}}
+\date{\today}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Se desarrolla un modelo determinista basado en ecuaciones diferenciales para estudiar la dinámica de intención de voto de la población ante estrategias de campaña tradicionales (medios masivos) y campañas dominadas por redes sociales.
+El sistema incluye tres candidatos (A, B, C), un compartimento de indecisos y uno de abstención.
+Se calibra un conjunto de parámetros hipotéticos y se analizan tres escenarios: \emph{Medios}, \emph{Redes} y \emph{Mixto}.
+Se presentan resultados de series temporales, un mapa de calor de sensibilidad y un análisis de número de persuasión básica.
+\end{abstract}
+
+\section{Introducción}
+La literatura sobre difusión de opiniones utiliza tanto modelos basados en agentes (ABM) como aproximaciones agregadas (ODE).
+Inspirados en los modelos compartimentales epidemiológicos (SEIR), adoptamos la segunda aproximación por su transparencia analítica y facilidad para describir cada parámetro.
+Nuestro objetivo es cuantificar cómo cambia la distribución de preferencias electorales cuando se modifican dos palancas principales: \textbf{propaganda masiva} ($\beta$) y \textbf{influencia social} ($\lambda$).
+
+\section{Materiales y métodos}
+
+\subsection{Compartimentos}
+\begin{itemize}
+   \item $U(t)$: indecisos susceptibles de persuasión.
+   \item $A(t)$, $B(t)$, $C(t)$: simpatizantes de cada candidato.
+   \item $N(t)$: abstención acumulada.
+   \item Población total normalizada: $U + A + B + C + N = 1$.
+\end{itemize}
+
+\subsection{Sistema de ecuaciones}
+\[
+\begin{aligned}
+\dot U &= -(\beta_A+\lambda_A A)U-(\beta_B+\lambda_B B)U-(\beta_C+\lambda_C C)U \\
+       &\qquad -\alpha U + \mu(A+B+C) \\[4pt]
+\dot A &= (\beta_A+\lambda_A A)U-\mu A-\sigma A(B+C) \\[2pt]
+\dot B &= (\beta_B+\lambda_B B)U-\mu B-\sigma B(A+C) \\[2pt]
+\dot C &= (\beta_C+\lambda_C C)U-\mu C-\sigma C(A+B) \\[2pt]
+\dot N &= \alpha U
+\end{aligned}
+\]
+
+Cada término de entrada/salida se justifica como transferencia de personas entre estados o pérdida de interés (\S\ref{sec:param}).
+
+\subsection{Parámetros}
+\label{sec:param}
+\input{tabla_parametros.tex}
+
+\subsection{Escenarios}
+\begin{description}
+  \item[\textbf{Medios}] $\beta$ altos,  $\lambda$ bajos.
+  \item[\textbf{Redes}] $\beta$ bajos,  $\lambda$ altos.
+  \item[\textbf{Mixto}] valores intermedios y $\sigma>0$.
+\end{description}
+
+\subsection{Implementación}
+El sistema se resuelve con \texttt{scipy.integrate.solve\_ivp}.
+El código está disponible en el paquete \texttt{src/} del repositorio Git, bajo licencia MIT.
+
+\section{Resultados}
+
+\subsection{Dinámica temporal}
+\begin{figure}[ht]
+   \centering
+   \includegraphics[width=\textwidth]{figures/compare_ABCN_Medios.png}
+   \caption{Evolución temporal de cada compartimento en el escenario \emph{Medios}.}
+\end{figure}
+
+\subsection{Sensibilidad del modelo}
+\begin{figure}[ht]
+   \centering
+   \includegraphics[width=.8\textwidth]{figures/heatmap_beta_lambda_A.png}
+   \caption{Mapa de calor del voto final de A en función de $\beta_A$ y $\lambda_A$.}
+\end{figure}
+
+\subsection{Métricas resumidas}
+\begin{itemize}
+  \item Voto final A/B/C/N por escenario.
+  \item Número de persuasión básica $R_P = (\beta+\lambda)/\mu$.
+  \item Área bajo la curva (AUC) como medida de apoyo acumulado.
+\end{itemize}
+
+\section{Discusión}
+Los resultados muestran que bajo fuerte propaganda tradicional, el candidato con mayor presupuesto ($A$) domina rápidamente, mientras que un escenario de redes produce distribuciones más equilibradas y depende de las condiciones iniciales.
+El compartimento de abstención $N$ crece si $\alpha>0$ y limita el voto efectivo.
+
+\subsection*{Limitaciones}
+\begin{enumerate}
+  \item Suposiciones homogéneas: no se modela la estructura real de la red.
+  \item Parámetros hipotéticos: falta calibración con datos de encuestas.
+  \item No se incluye retroalimentación negativa por saturación mediática.
+\end{enumerate}
+
+\section{Conclusiones}
+El modelo ODE, aunque simplificado, permite comparar cuantitativamente estrategias de campaña y extraer umbrales de efectividad.
+Valores de $R_P>1$ indican crecimiento auto-sostenido de simpatizantes; la combinación $\beta$–$\lambda$ necesaria depende fuertemente de la tasa de olvido $\mu$.
+
+\section*{Código y datos}
+Repositorio: \url{https://github.com/tu_usuario/proyecto_simulacion}.
+Scripts para reproducir figuras: \texttt{src/experiments/\*.py}.
+\end{document}

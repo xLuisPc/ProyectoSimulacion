@@ -1,0 +1,10 @@
+Símbolo,Descripción,Unidad,Medios,Redes,Mixto
+$\beta_A$,Propaganda masiva pro‑A,1/día,0.04,0.005,0.02
+$\beta_B$,Propaganda masiva pro‑B,1/día,0.015,0.005,0.015
+$\beta_C$,Propaganda masiva pro‑C,1/día,0.005,0.005,0.008
+$\lambda_A$,Influ. social de A,1/día,0.2,1.0,0.6
+$\lambda_B$,Influ. social de B,1/día,0.2,1.0,0.6
+$\lambda_C$,Influ. social de C,1/día,0.1,1.0,0.4
+$\mu$,Fatiga/olvido,1/día,0.03,0.03,0.03
+$\alpha$,Tasa de abstención,1/día,0.01,0.01,0.01
+$\sigma$,Contra‑persuasión,1/día,0.0,0.0,0.01

@@ -4,7 +4,7 @@ from ..scenarios.extended import Y0_EXT, T_END_EXT
 
 beta_vals = np.linspace(0.005, 0.05, 5)    # β_A
 lambda_vals = np.linspace(0.1, 1.0, 5)      # λ_A
-alpha_vals = [0.00, 0.01, 0.02]             # abstención
+alpha_vals = [0.01]                 # abstención
 
 header = ['beta_A', 'lambda_A', 'alpha', 'final_A', 'final_B', 'final_C', 'final_N']
 with open('calibration_results.csv', 'w', newline='') as f:
